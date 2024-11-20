@@ -1,0 +1,49 @@
+# Function to calculate waiting time
+def calculate_waiting_time(processes, n, burst_time, waiting_time, arrival_time):
+    service_time = [0] * n
+    service_time[0] = arrival_time[0]
+    waiting_time[0] = 0  # First process has no waiting time
+
+    # Calculating waiting time for each process
+    for i in range(1, n):
+        # Add burst time of previous processes to get service time
+        service_time[i] = service_time[i - 1] + burst_time[i - 1]
+        waiting_time[i] = service_time[i] - arrival_time[i]
+
+        # If waiting time for a process is negative, set it to zero
+        if waiting_time[i] < 0:
+            waiting_time[i] = 0
+
+# Function to calculate turnaround time
+def calculate_turnaround_time(n, burst_time, waiting_time, turnaround_time):
+    for i in range(n):
+        turnaround_time[i] = burst_time[i] + waiting_time[i]
+
+# Function to find average time
+def find_avg_time(processes, n, arrival_time, burst_time):
+    waiting_time = [0] * n
+    turnaround_time = [0] * n
+
+    # Calculate waiting time and turnaround time
+    calculate_waiting_time(processes, n, burst_time, waiting_time, arrival_time)
+    calculate_turnaround_time(n, burst_time, waiting_time, turnaround_time)
+
+    # Display process information and calculate total times
+    print("Process\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time")
+    total_waiting_time = 0
+    total_turnaround_time = 0
+    for i in range(n):
+        total_waiting_time += waiting_time[i]
+        total_turnaround_time += turnaround_time[i]
+        print(f"{processes[i]}\t\t{arrival_time[i]}\t\t{burst_time[i]}\t\t{waiting_time[i]}\t\t{turnaround_time[i]}")
+
+    print(f"\nAverage Waiting Time: {total_waiting_time / n:.2f}")
+    print(f"Average Turnaround Time: {total_turnaround_time / n:.2f}")
+
+# Input: List of process IDs, arrival times, and burst times
+processes = [1, 2, 3, 4]
+arrival_time = [0, 1, 2, 3]  # Arrival time for each process
+burst_time = [5, 3, 8, 6]    # Burst time for each process
+n = len(processes)
+
+find_avg_time(processes, n, arrival_time, burst_time)
